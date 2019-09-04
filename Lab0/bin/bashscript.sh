@@ -38,7 +38,7 @@ while [ "$close" != 1 ]; do                ## outer loop redraws menu each time
                 ;;
 
             "Generate custom random test files for sorting")
-                echo "Enter the range,size,seed  eg -> 50 20 38"
+                echo "Enter the range,size,seed  eg -> 50 20 39"
                 read range size seed
                 if [ $range -lt $size ]; then
                     echo "Invalid, range is less than size"

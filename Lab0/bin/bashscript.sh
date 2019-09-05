@@ -85,6 +85,9 @@ while [ "$close" != 1 ]; do                ## outer loop redraws menu each time
                             file="./$testfilename.txt"
                             if [ -e $file ]; then
                                 echo "$testfilename.txt exists"
+                                pushd /home/shreya1809/Concurrent_Programming/Lab0/MergeSort
+                                ./mysort --name $testfilename.txt -o mySorted$testfilename.txt
+                                popd
                             else 
                                 echo "$testfilename.txt does not exists"
                             fi 
@@ -98,6 +101,9 @@ while [ "$close" != 1 ]; do                ## outer loop redraws menu each time
                                         file="./TestFile$FILECOUNT1.txt"
                                         if [ -e $file ]; then
                                             echo "TestFile$FILECOUNT1.txt exists"
+                                            pushd /home/shreya1809/Concurrent_Programming/Lab0/MergeSort
+                                            ./mysort --name TestFile$FILECOUNT1.txt -o mySortedTestFile$FILECOUNT1.txt
+                                            popd
                                             #insert here
                                         else
                                             echo "TestFile$FILECOUNT1.txt does not exists"

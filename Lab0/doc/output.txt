@@ -1,0 +1,342 @@
+Lab0 - Sorting a text file of intergers using Mergesort/Quicksort 
+
+Main Menu:
+
+1) Generate 14 randomized test files for sorting
+2) Generate custom random test files for sorting
+3) Sort files by my sorting method
+4) Sort files using sort -n
+5) Compare the sorted files
+6) Delete all text files and make clean
+7) exit
+Selection: Generating 14 random test files. Enter range and size eg-> 30 20 
+14 Random Test files generated
+
+Main Menu:
+
+1) Generate 14 randomized test files for sorting
+2) Generate custom random test files for sorting
+3) Sort files by my sorting method
+4) Sort files using sort -n
+5) Compare the sorted files
+6) Delete all text files and make clean
+7) exit
+Selection: Enter the range,size,seed  eg -> 50 20 39
+suggest a file name eg-> myfile
+myfile.txt is generated with 20 elements in the range of 1 to 50
+
+Main Menu:
+
+1) Generate 14 randomized test files for sorting
+2) Generate custom random test files for sorting
+3) Sort files by my sorting method
+4) Sort files using sort -n
+5) Compare the sorted files
+6) Delete all text files and make clean
+7) exit
+Selection: Choose Sorting Algorithm
+1. Mergesort
+2. Quicksort
+You have chosen Mergesort
+Complining the mergesort program....
+~/Concurrent_Programming/Lab0 ~/Concurrent_Programming/Lab0/script
+gcc  obj/mergesort.o obj/linklist.o obj/parse.o obj/program.o -lm -o bin/mysort
+~/Concurrent_Programming/Lab0/script
+1. Execute Mergesort for a single test case
+2. Execute Mergesort for a for all 14 test cases
+Enter the name of file to sort eg -> TestFile1
+myfile.txt exists
+~/Concurrent_Programming/Lab0/bin ~/Concurrent_Programming/Lab0/script
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedmyfile.txt
+Source filename is myfile.txt 
+The file exists
+The list of integers is as follows:
+1	12	6	48	29	10	30	21	14	22	32	20	24	40	3	19	9	34	37	49	
+Writing sorted integers to output file
+Program Done
+~/Concurrent_Programming/Lab0/script
+
+Main Menu:
+
+1) Generate 14 randomized test files for sorting
+2) Generate custom random test files for sorting
+3) Sort files by my sorting method
+4) Sort files using sort -n
+5) Compare the sorted files
+6) Delete all text files and make clean
+7) exit
+Selection: Choose Sorting Algorithm
+1. Mergesort
+2. Quicksort
+You have chosen Mergesort
+Complining the mergesort program....
+~/Concurrent_Programming/Lab0 ~/Concurrent_Programming/Lab0/script
+make: 'bin/mysort' is up to date.
+~/Concurrent_Programming/Lab0/script
+1. Execute Mergesort for a single test case
+2. Execute Mergesort for a for all 14 test cases
+TestFile1.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile1.txt
+Source filename is TestFile1.txt 
+The file exists
+The list of integers is as follows:
+1	21	29	28	27	18	9	20	16	22	19	23	10	7	30	3	24	8	12	13	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile2.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile2.txt
+Source filename is TestFile2.txt 
+The file exists
+The list of integers is as follows:
+1	20	14	5	3	9	6	21	22	23	29	2	12	19	26	15	8	27	25	10	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile3.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile3.txt
+Source filename is TestFile3.txt 
+The file exists
+The list of integers is as follows:
+25	20	24	16	2	4	1	7	21	19	22	18	11	23	3	6	27	29	14	26	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile4.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile4.txt
+Source filename is TestFile4.txt 
+The file exists
+The list of integers is as follows:
+30	22	18	24	25	20	5	11	12	28	13	29	3	26	7	1	21	16	2	8	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile5.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile5.txt
+Source filename is TestFile5.txt 
+The file exists
+The list of integers is as follows:
+14	11	4	12	20	15	2	8	25	21	6	26	29	5	19	27	17	3	10	7	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile6.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile6.txt
+Source filename is TestFile6.txt 
+The file exists
+The list of integers is as follows:
+19	3	15	25	16	5	1	29	17	9	10	11	18	20	30	21	12	4	8	2	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile7.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile7.txt
+Source filename is TestFile7.txt 
+The file exists
+The list of integers is as follows:
+5	9	12	13	29	4	2	19	20	22	17	24	15	10	14	7	26	16	23	1	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile8.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile8.txt
+Source filename is TestFile8.txt 
+The file exists
+The list of integers is as follows:
+4	13	19	29	8	26	28	22	2	15	1	18	14	16	17	20	6	23	12	7	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile9.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile9.txt
+Source filename is TestFile9.txt 
+The file exists
+The list of integers is as follows:
+27	26	10	20	8	30	12	18	7	3	14	9	17	6	19	15	5	11	28	13	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile10.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile10.txt
+Source filename is TestFile10.txt 
+The file exists
+The list of integers is as follows:
+27	10	25	5	20	18	23	1	19	14	12	21	16	26	6	24	30	3	15	13	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile11.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile11.txt
+Source filename is TestFile11.txt 
+The file exists
+The list of integers is as follows:
+20	12	14	5	3	9	18	1	30	19	23	13	25	27	21	8	29	2	24	11	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile12.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile12.txt
+Source filename is TestFile12.txt 
+The file exists
+The list of integers is as follows:
+5	21	4	23	18	22	8	9	6	24	29	25	11	12	15	2	14	17	16	7	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile13.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile13.txt
+Source filename is TestFile13.txt 
+The file exists
+The list of integers is as follows:
+10	14	6	23	15	11	7	18	20	22	3	13	24	2	16	1	19	12	27	8	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+TestFile14.txt exists
+******Mergesort Algorithm by Shreya*******
+-o option
+Output filename is mySortedTestFile14.txt
+Source filename is TestFile14.txt 
+The file exists
+The list of integers is as follows:
+8	23	20	28	25	2	11	1	5	27	4	9	18	3	10	6	21	22	16	14	
+Writing sorted integers to output file
+Program Done
+ 0  ~/Concurrent_Programming/Lab0/bin
+/home/shreya1809/Concurrent_Programming/Lab0/script
+All files exist
+
+Main Menu:
+
+1) Generate 14 randomized test files for sorting
+2) Generate custom random test files for sorting
+3) Sort files by my sorting method
+4) Sort files using sort -n
+5) Compare the sorted files
+6) Delete all text files and make clean
+7) exit
+Selection: 1. Sort a single file
+2. Sort all the test files
+Enter the name of file to sort eg -> TestFile1
+myfile.txt exists
+~/Concurrent_Programming/Lab0/files ~/Concurrent_Programming/Lab0/script
+~/Concurrent_Programming/Lab0/script
+File has been sorted and saved as Sortedmyfile.txt
+
+Main Menu:
+
+1) Generate 14 randomized test files for sorting
+2) Generate custom random test files for sorting
+3) Sort files by my sorting method
+4) Sort files using sort -n
+5) Compare the sorted files
+6) Delete all text files and make clean
+7) exit
+Selection: 1. Sort a single file
+2. Sort all the test files
+All files exist, Sorting ...
+~/Concurrent_Programming/Lab0/files ~/Concurrent_Programming/Lab0/script
+~/Concurrent_Programming/Lab0/script
+All TestFiles sorted and saved as 'SortedTestFileN.txt'
+
+Main Menu:
+
+1) Generate 14 randomized test files for sorting
+2) Generate custom random test files for sorting
+3) Sort files by my sorting method
+4) Sort files using sort -n
+5) Compare the sorted files
+6) Delete all text files and make clean
+7) exit
+Selection: 1. Compare 2 files
+2. Compare all the 14 SortedTestFiles(sort -n) with mySortedTestFiles(merge or quicksort)
+Enter the name of files to compare eg -> SortedTestFile1 mySortedTestFile1
+Both the files exist, Comparing ...
+~/Concurrent_Programming/Lab0/files ~/Concurrent_Programming/Lab0/script
+Files are Same !
+~/Concurrent_Programming/Lab0/script
+
+Main Menu:
+
+1) Generate 14 randomized test files for sorting
+2) Generate custom random test files for sorting
+3) Sort files by my sorting method
+4) Sort files using sort -n
+5) Compare the sorted files
+6) Delete all text files and make clean
+7) exit
+Selection: 1. Compare 2 files
+2. Compare all the 14 SortedTestFiles(sort -n) with mySortedTestFiles(merge or quicksort)
+Checking if all files exist...
+All files exist. Comparing...
+~/Concurrent_Programming/Lab0/files ~/Concurrent_Programming/Lab0/script
+SortedTestFile1.txt and mySortedTestFile1.txtFiles are Same !
+SortedTestFile2.txt and mySortedTestFile2.txtFiles are Same !
+SortedTestFile3.txt and mySortedTestFile3.txtFiles are Same !
+SortedTestFile4.txt and mySortedTestFile4.txtFiles are Same !
+SortedTestFile5.txt and mySortedTestFile5.txtFiles are Same !
+SortedTestFile6.txt and mySortedTestFile6.txtFiles are Same !
+SortedTestFile7.txt and mySortedTestFile7.txtFiles are Same !
+SortedTestFile8.txt and mySortedTestFile8.txtFiles are Same !
+SortedTestFile9.txt and mySortedTestFile9.txtFiles are Same !
+SortedTestFile10.txt and mySortedTestFile10.txtFiles are Same !
+SortedTestFile11.txt and mySortedTestFile11.txtFiles are Same !
+SortedTestFile12.txt and mySortedTestFile12.txtFiles are Same !
+SortedTestFile13.txt and mySortedTestFile13.txtFiles are Same !
+SortedTestFile14.txt and mySortedTestFile14.txtFiles are Same !
+~/Concurrent_Programming/Lab0/script
+
+Main Menu:
+
+1) Generate 14 randomized test files for sorting
+2) Generate custom random test files for sorting
+3) Sort files by my sorting method
+4) Sort files using sort -n
+5) Compare the sorted files
+6) Delete all text files and make clean
+7) exit
+Selection: All Files Deleted
+~/Concurrent_Programming/Lab0 ~/Concurrent_Programming/Lab0/script
+rm -rf *.o *.out 
+rm -rf /home/shreya1809/Concurrent_Programming/Lab0/files/*txt
+rm -rf /home/shreya1809/Concurrent_Programming/Lab0/bin/mysort
+~/Concurrent_Programming/Lab0/script
+
+Main Menu:
+
+1) Generate 14 randomized test files for sorting
+2) Generate custom random test files for sorting
+3) Sort files by my sorting method
+4) Sort files using sort -n
+5) Compare the sorted files
+6) Delete all text files and make clean
+7) exit
+Selection: Good bye

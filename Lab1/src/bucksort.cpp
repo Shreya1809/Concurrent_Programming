@@ -6,7 +6,7 @@
 using namespace std;
 
 struct timespec start_time1, end_time1;
-
+int j = 0;
 class Bucket
 {
     private:
@@ -79,8 +79,12 @@ struct _distributeArg
 
 void *distribute(void *args)
 {
+    j++;
     struct _distributeArg *arg = (struct _distributeArg*)args;
-    clock_gettime(CLOCK_MONOTONIC,&start_time1);
+    if(j == 1)
+    {
+        clock_gettime(CLOCK_MONOTONIC,&start_time1);
+    }
     for(size_t i = arg->low; i <= arg->high; i++)
     {
         arg->buckMan->insert((*(arg->inArray))[i]);

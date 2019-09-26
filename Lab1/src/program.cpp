@@ -72,6 +72,7 @@ int main(int argc , char *argv[])
         exit(EXIT_FAILURE);
     }
 
+    printf("Reading the numbers into array....\n");
     std::vector<int> inputNumberArray;
     //reads the file line by line, converts the string into integer and adds to the list from tail
     while ((read = getline(&line, &len, fp)) != -1) {
@@ -79,12 +80,12 @@ int main(int argc , char *argv[])
         inputNumberArray.push_back(data);
     }
     fclose(fp);
-    /*cout << "File read - ";
+    cout << "File read - ";
     for(size_t i = 0; i < inputNumberArray.size(); i++)
     {
         cout<<inputNumberArray[i]<< " ";
     }
-    cout<<endl;*/
+    cout<<endl;
     int MAX_NUMBERS = inputNumberArray.size();
     vector<int> outputNumberArray(0,inputNumberArray.size());
 

@@ -110,6 +110,7 @@ void* sort(void* threadArg)
 
 void forkJoinMethod(vector<int> *inputArray, int numOfThreads)
 {
+    printf("In fork join method....\n");
     pthread_t threads[numOfThreads]; 
     struct _threadArg threadArg[numOfThreads];
     const size_t MAX_ELEMENTS = inputArray->size();
@@ -130,7 +131,7 @@ void forkJoinMethod(vector<int> *inputArray, int numOfThreads)
         pthread_create(&threads[i], NULL, sort, 
                                         (void*)&threadArg[i]); 
     }
-  
+    printf("%d threads created\n",numOfThreads);
     // joining all 4 threads 
     for (i = 0; i < numOfThreads; i++)
     { 

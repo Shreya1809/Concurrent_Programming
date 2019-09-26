@@ -95,6 +95,7 @@ void *distribute(void *args)
 
 void bucketsortMethod(vector<int> *inputArray, size_t numOfThreads)
 {
+    printf("In bucket sort method....\n");
     int min = *min_element(inputArray->begin(),inputArray->end());
     int max = *max_element(inputArray->begin(),inputArray->end());
     BucketManager buckMan(inputArray->size(), min, max);
@@ -116,7 +117,7 @@ void bucketsortMethod(vector<int> *inputArray, size_t numOfThreads)
         pthread_create(&threads[i], NULL, distribute, 
                                         (void*)&threadArg[i]); 
     }
-  
+    printf("%d threads created\n",numOfThreads);
     // joining all 4 threads 
     for (i = 0; i < numOfThreads; i++)
     { 

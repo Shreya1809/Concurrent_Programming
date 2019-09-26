@@ -26,6 +26,7 @@ Program Approach
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
 using namespace std;
 
 #include "parse.h"
@@ -80,13 +81,19 @@ int main(int argc , char *argv[])
         inputNumberArray.push_back(data);
     }
     fclose(fp);
-    cout << "File read - ";
+    /*cout << "File read - ";
     for(size_t i = 0; i < inputNumberArray.size(); i++)
     {
         cout<<inputNumberArray[i]<< " ";
     }
-    cout<<endl;
+    cout<<endl;*/
     int MAX_NUMBERS = inputNumberArray.size();
+    if(numOfThreads > MAX_NUMBERS)
+    {
+        printf("Number of threads is greater than the number of integer! INVALID! \n");
+        return -1;
+
+    }
     vector<int> outputNumberArray(0,inputNumberArray.size());
 
     switch(algoType){
@@ -108,6 +115,15 @@ int main(int argc , char *argv[])
         cout<<inputNumberArray[i] << " ";
     }
     cout<<endl;*/
+    bool Result = std::is_sorted(inputNumberArray.begin(),inputNumberArray.end());
+    if(Result)
+    {
+        cout << "The resultant array is sorted " << endl;
+    }
+    else{
+        cout << "The resultant array is NOT sorted " << endl;   
+    }
+    
 
     fp2 = fopen(outfilepath.c_str(), "w+");
     if(fp2 == NULL)
@@ -124,7 +140,6 @@ int main(int argc , char *argv[])
         
         fclose(fp2);
     }
-
     printf("Program Done\n");      
     return 0;
 }

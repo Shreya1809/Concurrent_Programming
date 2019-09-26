@@ -6,7 +6,6 @@
 using namespace std;
 
 struct timespec start_time1, end_time1;
-int j = 0;
 class Bucket
 {
     private:
@@ -52,9 +51,10 @@ class BucketManager
 
     void insert(int num)
     {
-        int index = floor (_numBucket * num / _max);
-        int index1 = (num - _min) / _numBucket;
-        _bucketHolder[index1].insert(num);
+        int index = floor ((_numBucket-1) * num / _max);
+        //int index = floor (_numBucket * num / _max);
+        //int index1 = (num - _min) % _numBucket;
+        _bucketHolder[index].insert(num);
     }
 
     vector<int> getSortedList()
@@ -79,26 +79,21 @@ struct _distributeArg
 
 void *distribute(void *args)
 {
-    j++;
     struct _distributeArg *arg = (struct _distributeArg*)args;
-    if(j == 1)
-    {
-        clock_gettime(CLOCK_MONOTONIC,&start_time1);
-    }
     for(size_t i = arg->low; i <= arg->high; i++)
     {
         arg->buckMan->insert((*(arg->inArray))[i]);
     }
-    clock_gettime(CLOCK_MONOTONIC,&end_time1);
     return 0;
 }
 
 void bucketsortMethod(vector<int> *inputArray, size_t numOfThreads)
 {
-    printf("In bucket sort method....\n");
+    //printf("In bucket sort method....\n");
     int min = *min_element(inputArray->begin(),inputArray->end());
     int max = *max_element(inputArray->begin(),inputArray->end());
-    BucketManager buckMan(inputArray->size(), min, max);
+    BucketManager buckMan(sqrt(inputArray->size()), min, max);
+    //BucketManager buckMan(10, min, max);
     const size_t MAX_ELEMENTS = inputArray->size();
     pthread_t threads[numOfThreads];
     struct _distributeArg threadArg[numOfThreads];
@@ -111,19 +106,19 @@ void bucketsortMethod(vector<int> *inputArray, size_t numOfThreads)
         threadArg[i].high = (i + 1) * (MAX_ELEMENTS / numOfThreads) - 1; 
     }
     threadArg[i-1].high = MAX_ELEMENTS -1;
-
+    clock_gettime(CLOCK_MONOTONIC,&start_time1);
     for(i = 0; i < numOfThreads; i++)
     {
         pthread_create(&threads[i], NULL, distribute, 
                                         (void*)&threadArg[i]); 
     }
-    printf("%d threads created\n",numOfThreads);
-    // joining all 4 threads 
+    //printf("%d threads created\n",numOfThreads);
     for (i = 0; i < numOfThreads; i++)
     { 
         pthread_join(threads[i], NULL);
-        printf("joined thread number %zu\n",i+1); 
+        //printf("joined thread number %zu\n",i+1); 
     }
+    clock_gettime(CLOCK_MONOTONIC,&end_time1);
 
     vector<int> sorted = buckMan.getSortedList();
     copy(sorted.begin(), sorted.end(), inputArray->begin());

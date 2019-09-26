@@ -94,23 +94,17 @@ void* sort(void* threadArg)
 { 
     struct _threadArg *arg = (struct _threadArg*)threadArg;
     pthread_barrier_wait(&bar);
-    if(arg->num ==1){
-		clock_gettime(CLOCK_MONOTONIC,&start_time);
-	}
-
-    printf("Thread %zu reporting for duty\n",arg->num);
+    //printf("Thread %zu reporting for duty\n",arg->num);
     if (arg->low < arg->high) { 
         merge_sort(*(arg->inputArray), arg->low, arg->high);
     }
-	pthread_barrier_wait(&bar);
-
-    clock_gettime(CLOCK_MONOTONIC,&end_time);
+	//pthread_barrier_wait(&bar);    
     return 0;
 } 
 
 void forkJoinMethod(vector<int> *inputArray, int numOfThreads)
 {
-    printf("In fork join method....\n");
+    //printf("In fork join method....\n");
     pthread_t threads[numOfThreads]; 
     struct _threadArg threadArg[numOfThreads];
     const size_t MAX_ELEMENTS = inputArray->size();
@@ -125,19 +119,20 @@ void forkJoinMethod(vector<int> *inputArray, int numOfThreads)
         threadArg[i].high = (i + 1) * (MAX_ELEMENTS / numOfThreads) - 1; 
     }
     threadArg[i-1].high = MAX_ELEMENTS -1;
-
+    clock_gettime(CLOCK_MONOTONIC,&start_time);
     for(i = 0; i < numOfThreads; i++)
     {
         pthread_create(&threads[i], NULL, sort, 
                                         (void*)&threadArg[i]); 
     }
-    printf("%d threads created\n",numOfThreads);
-    // joining all 4 threads 
+    //printf("%d threads created\n",numOfThreads);
+    
     for (i = 0; i < numOfThreads; i++)
     { 
         pthread_join(threads[i], NULL);
-        printf("joined thread number %zu\n",i+1); 
+        //printf("joined thread number %zu\n",i+1); 
     }
+    clock_gettime(CLOCK_MONOTONIC,&end_time);
     pthread_barrier_destroy(&bar);
 
     int kArrayIndex = 0;

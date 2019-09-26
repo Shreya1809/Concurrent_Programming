@@ -64,11 +64,11 @@ int ParseCommandline(int argc , char *argv[], string &srcfile , string &outfile)
         break;
 
         case 'a':
-            printf("The algorithm is %s\n",optarg);
             if((strcmp(optarg,"fj")) != 0)
             {
                 if((strcmp(optarg,"bucket")) == 0)
                 {  
+                    printf("The algorithm is Bucket Sort\n");
                     algoType = BUCKET_SORT; 
                 }
                 else

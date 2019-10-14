@@ -159,7 +159,7 @@ TicketLock::~TicketLock()
 //         std::atomic<QNode *> Tail = {nullptr};
 //     };
 
-#define SELF_TEST_LOCK
+//#define SELF_TEST_LOCK
 #ifdef SELF_TEST_LOCK
 #include <cassert>
 #include <iostream>

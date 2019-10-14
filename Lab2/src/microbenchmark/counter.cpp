@@ -1,56 +1,4 @@
-
-// #include <stdio.h>
-// #include <pthread.h>
-// #include <stdlib.h> 
-// #include <malloc.h>
-// #include "parse.h"
-// #include "locks.h"
-
-
-// pthread_t tid[370]; //max threads possible
-// int cntr = 0; //global counter
-
-
-// void *counter(void *args);
-// int main(int argc , char *argv[])
-// {
-//     string dummy = "\0";
-//     printf("******Micro Benchmark by Shreya*******\n");
-//     int val1 = ParseCommandline(argc ,argv, dummy , dummy);
-//     if(val1 == 1) //name flag is on
-//     {
-//         return 0;
-//     }
-//     //spawn n number of threads for i iterations
-//     for(int i = 0; i< numOfThreads ; i++)
-//     {
-//         printf("i is %d\n", i);
-//         pthread_create(&tid[i], NULL, counter, (void*)&i); 
-//     }
-
-//     for(int i = 0; i< numOfThreads ; i++)
-//     {
-//         pthread_join(tid[i], NULL); 
-//     }
-//     return 0;
-// }
-
-// void *counter(void *args)
-// {
-//     int my_tid = *((int *)args);
-//     int mythreaditer = numofiterations*numOfThreads;
-//     printf("my_tid = %d and my iterations %d\n",my_tid, mythreaditer);
-//     for(int i = 0; i< mythreaditer; i++){
-//         if(i % numOfThreads == my_tid){
-//             printf("in here\n");
-//         //lock();
-//         cntr++;
-//         printf("[counter]:\t%d\n",cntr);
-//         //unlock();
-//     }}
-//     return NULL;
-// }
-
+#if 0
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -269,33 +217,26 @@ void* thread_main(void* args){
 
 int main(int argc, char* argv[]){
 	
-	// parse args
-	// if(argc!=4){
-	// 	printf("USAGE: perf_test [num_threads] [test_num] [iterations]\n");
-	// 	for(int i = 0; i<NUM_FUNCS; i++){
-	// 		printf("%d : %s\n",i,func_names[i]);
-	// 	}
-	// 	exit(-1);
-	// }
-	// else{
-	// 	NUM_THREADS = atoi( argv[1] );
-	// 	if(NUM_THREADS > 150){
-	// 		printf("ERROR; too many threads\n");
-	// 		exit(-1);
-	// 	}
-	// 	TEST_NUM = atoi( argv[2] );
-	// 	ITERATIONS = atoi(argv[3]);
-	// 	printf("Running %zu threads on %s for %d iterations\n",
-	// 	 NUM_THREADS,func_names[TEST_NUM],ITERATIONS);
-	// }
-    string dummy = "\0";
-     printf("******Micro Benchmark by Shreya*******\n");
-     int val1 = ParseCommandline(argc ,argv, dummy , dummy);
-    if(val1 == 1) //name flag is on
-    {
-        return 0;
-    }
-	
+	//parse args
+	if(argc!=4){
+		printf("USAGE: perf_test [num_threads] [test_num] [iterations]\n");
+		for(int i = 0; i<NUM_FUNCS; i++){
+			printf("%d : %s\n",i,func_names[i]);
+		}
+		exit(-1);
+	}
+	else{
+		NUM_THREADS = atoi( argv[1] );
+		if(NUM_THREADS > 150){
+			printf("ERROR; too many threads\n");
+			exit(-1);
+		}
+		TEST_NUM = atoi( argv[2] );
+		ITERATIONS = atoi(argv[3]);
+		printf("Running %zu threads on %s for %d iterations\n",
+		 NUM_THREADS,func_names[TEST_NUM],ITERATIONS);
+	}
+    
 	global_init();
 	
 	// launch threads
@@ -330,3 +271,5 @@ int main(int argc, char* argv[]){
 	double elapsed_s = ((double)elapsed_ns)/1000000000.0;
 	printf("Elapsed (s): %lf\n",elapsed_s);
 }
+
+#endif

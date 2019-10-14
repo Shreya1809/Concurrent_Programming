@@ -28,8 +28,8 @@ LDFLAGS:=
 
 all: $(TARGET1) $(TARGET2)
 
-test: 
-	$(CC) $(CFLAGS) -I./$(INC_DIR) -DDEBUG src/common/locks.cpp -o $@
+#test: 
+#	$(CC) $(CFLAGS) -I./$(INC_DIR) -DDEBUG -DSELF_TEST_LOCK src/common/locks.cpp -o $@
 
 #linking phase
 $(TARGET1): $(OBJECTS1) $(COMMON_OBJECTS)
@@ -38,17 +38,21 @@ $(TARGET1): $(OBJECTS1) $(COMMON_OBJECTS)
 $(TARGET2): $(OBJECTS2) $(COMMON_OBJECTS)
 	$(CC) $(CFLAGS) -I./$(INC_DIR) $(LDFLAGS) $^ -o $@ $(LIBS)
 
-#creating obj files from source files
-$(OBJ_DIR1)/%.o: $(SRC_DIR1)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJ_DIR2)/%.o: $(SRC_DIR2)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+#creating obj files from source files
+$(OBJ_DIR1)/%.o: $(SRC_DIR1)/%.cpp
+	$(CC) $(CFLAGS) -I./$(INC_DIR) -c $< -o $@
+
+$(OBJ_DIR2)/%.o: $(SRC_DIR2)/%.cpp
+	$(CC) $(CFLAGS) -I./$(INC_DIR) -c $< -o $@
+
+$(COMMON_OBJ)/%.o: $(COMMON_SRC_DIR)/%.cpp
+	$(CC) $(CFLAGS) -I./$(INC_DIR) -c $< -o $@
 
 
 clean:
-	rm -rf $(COMMON_OBJ)
-	rm -rf $(OBJ_DIR1) $(TARGET1) $(TARGET_DIR) 
-	rm -rf $(OBJ_DIR2) $(TARGET2) $(TARGET_DIR)
+	rm -rf $(COMMON_OBJ)/*.o
+	rm -rf $(OBJ_DIR1)/*.o $(TARGET1) 
+	rm -rf $(OBJ_DIR2)/*.o $(TARGET2)
 	rm -rf test
 	# rm -rf $(CURRENT_PATH)/files/*txt

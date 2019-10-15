@@ -30,6 +30,7 @@ Program Approach
 using namespace std;
 
 #include "parse.h"
+#include "locks.h"
 #include "forkjoin.h"
 #include "bucksort.h"
 
@@ -78,8 +79,10 @@ int main(int argc , char *argv[])
     //reads the file line by line, converts the string into integer and adds to the list from tail
     while ((read = getline(&line, &len, fp)) != -1) {
         sscanf(line, "%d", &data); 
+        line != NULL ? free(line), line = NULL : 0;
         inputNumberArray.push_back(data);
     }
+    line != NULL ? free(line), line = NULL : 0;
     fclose(fp);
     /*cout << "File read - ";
     for(size_t i = 0; i < inputNumberArray.size(); i++)

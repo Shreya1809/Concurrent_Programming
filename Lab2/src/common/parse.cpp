@@ -13,13 +13,13 @@
 #include <stdlib.h> 
 #include "parse.h"
 #include "locks.h"
+#include "barriers.h"
 using namespace std;
 
 
 algotype_t algoType = FORK_JOIN;
-bartype_t barType = PTHREAD;
+CP::BarType barType = CP::BarType::PTHREAD;
 CP::LockType lockType = CP::LockType::MUTEX_LOCK;
-//locktype_t lockType = MUTEX_LOCK;
 int name_flag = 0;
 int numOfThreads = 0;
 int numofiterations = 0;
@@ -62,7 +62,7 @@ int ParseCommandline(int argc , char *argv[], string &srcfile , string &outfile)
         
         case 'o':
             printf ("[Output File]:\t%s\n", optarg);
-            outfile = std::string(strdup(optarg));     
+            outfile = std::string(optarg);     
         break;
 
         case 't':
@@ -100,7 +100,7 @@ int ParseCommandline(int argc , char *argv[], string &srcfile , string &outfile)
                 if((strcmp(optarg,"pthread")) == 0)
                 {  
                     printf("[Barrier]:\tpthread barrier\n");
-                    barType = PTHREAD; 
+                    barType = CP::BarType::PTHREAD; 
                 }
                 else
                 {
@@ -111,7 +111,7 @@ int ParseCommandline(int argc , char *argv[], string &srcfile , string &outfile)
             else
             {
                 printf("[Barrier]:\tSense reversal barrier\n"); 
-                barType = SENSE;
+                barType = CP::BarType::SENSE;
             }
         break;
 

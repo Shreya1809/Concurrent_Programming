@@ -5,6 +5,10 @@
 #include <algorithm>
 #include <math.h>
 #include <stdio.h>
+#include "locks.h"
+#include "parse.h"
+#include <iostream>
+using namespace CP;
 
 using namespace std;
 
@@ -13,19 +17,34 @@ class Bucket
 {
     private:
         std::multiset<int> _bucket;
-        pthread_mutex_t _bucketLock;
+        ILockSharedPtr _bucketLock = nullptr;
 
     public:
-        Bucket()
+        Bucket(LockType typeoflock)
         {
-            pthread_mutex_init(&_bucketLock, NULL);
-            
+            _bucketLock = LockFactory::GetLockObject(typeoflock);
+            // cout << "*****SHREYA**" <<std::string(__FUNCTION__) << "Lock type:" << (int)(_bucketLock->GetLockType()) << endl;
+        }
+        ~Bucket()
+        {
+            // cout << __FUNCTION__ << endl;
         }
         void insert(int num)
         {
-            pthread_mutex_lock(&_bucketLock);
-            _bucket.insert(num);
-            pthread_mutex_unlock(&_bucketLock);
+            if(_bucketLock->GetLockType() != LockType::MCS_LOCK)
+            {
+                _bucketLock->Lock();
+                _bucket.insert(num);
+                _bucketLock->Unlock();
+            }
+            else 
+            {
+                McsLock::QNode node;
+                dynamic_pointer_cast<McsLock>(_bucketLock)->Lock(node);
+                _bucket.insert(num);
+                dynamic_pointer_cast<McsLock>(_bucketLock)->Unlock(node);
+            }
+            
         }
         vector<int> getBucket()
         {
@@ -37,19 +56,21 @@ class Bucket
 class BucketManager
 {
     private:
-        Bucket *_bucketHolder;
+        // Bucket *_bucketHolder;
+        std::vector<Bucket> _bucketHolder;
         size_t _numBucket;
         int _min;
         int _max;
         
     public:
-    BucketManager(size_t numBuckets, int minVal, int maxVal): _numBucket(numBuckets),_min(minVal),_max(maxVal)
+    BucketManager(size_t numBuckets, int minVal, int maxVal, LockType typeofLock): _numBucket(numBuckets),_min(minVal),_max(maxVal)
     {
-        _bucketHolder = new Bucket[_numBucket];
+        // _bucketHolder = new Bucket[_numBucket](typeofLock);
+        _bucketHolder.resize(numBuckets, Bucket(typeofLock));
     }
     ~BucketManager()
     {
-        delete []_bucketHolder;
+        // delete []_bucketHolder;
     }
 
     void insert(int num)
@@ -95,7 +116,7 @@ void bucketsortMethod(vector<int> *inputArray, size_t numOfThreads)
     //printf("In bucket sort method....\n");
     int min = *min_element(inputArray->begin(),inputArray->end());
     int max = *max_element(inputArray->begin(),inputArray->end());
-    BucketManager buckMan(sqrt(inputArray->size()), min, max);
+    BucketManager buckMan(sqrt(inputArray->size()), min, max, lockType);
     //BucketManager buckMan(10, min, max);
     const size_t MAX_ELEMENTS = inputArray->size();
     pthread_t threads[numOfThreads];

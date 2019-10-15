@@ -24,6 +24,8 @@ ILockSharedPtr LockFactory::GetLockObject(LockType type)
         return std::make_shared<TTASLock>();
     case LockType::TICKET_LOCK:
         return std::make_shared<TicketLock>();
+    case LockType::MCS_LOCK:
+        return std::make_shared<McsLock>();
     default:
         return nullptr;
     }
@@ -112,48 +114,45 @@ TicketLock::~TicketLock()
     PRINT_DESTRUCTOR_MSG();
 }
 
-// class McsLock : public ILock
-// {
-// public:
-//     struct QNode
-//     {
-//         std::atomic<QNode *> Next = {nullptr};
-//         std::atomic_bool     Locked = {false};
-//     };
 
-// public:
-//     __always_inline void Lock(QNode &node)
-//     {
-//         node.Next = nullptr;
-//         node.Locked = true;
 
-//         QNode *oldTail = Tail.exchange(&node);
+void McsLock::Lock(QNode &node)
+{
+    node.Next = nullptr;
+    node.Locked = true;
 
-//         if (oldTail != nullptr)
-//         {
-//             oldTail->Next = &node;
+    QNode *oldTail = Tail.exchange(&node);
 
-//             while (node.Locked == true)
-//                 //CpuRelax();
-//                 asm("pause");
-//         }
-//     }
+    if (oldTail != nullptr)
+    {
+        oldTail->Next = &node;
 
-//     __always_inline void Unlock(QNode &node)
-//     {
-//         if (node.Next.load() == nullptr)
-//         {
-//             QNode *tailWasMe = &node;
-//             if (Tail.compare_exchange_strong(tailWasMe, nullptr))
-//                 return;
+        while (node.Locked == true)
+            //CpuRelax();
+            asm("pause");
+    }
+}
 
-//             while (node.Next.load() == nullptr)
-//                 //CpuRelax();
-//                 asm("pause");
-//         }
+void McsLock::Unlock(QNode &node)
+{
+    if (node.Next.load() == nullptr)
+    {
+        QNode *tailWasMe = &node;
+        if (Tail.compare_exchange_strong(tailWasMe, nullptr))
+            return;
 
-//         node.Next.load()->Locked = false;
-//     }
+        while (node.Next.load() == nullptr)
+            //CpuRelax();
+            asm("pause");
+    }
+
+    node.Next.load()->Locked = false;
+}
+
+McsLock::~McsLock()
+{
+    //Unlock(QNode &node);
+}
 
 //     private:
 //         std::atomic<QNode *> Tail = {nullptr};

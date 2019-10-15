@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <string>
 #include "locks.h"
+#include "barriers.h"
 using namespace std;
 
 /* Flag set by ‘--name’. */
@@ -29,13 +30,9 @@ typedef enum _algoType{
     BUCKET_SORT
 }algotype_t;
 
-typedef enum _bartype{
-    PTHREAD = 0,
-    SENSE
-}bartype_t;
 
 extern algotype_t algoType;
-extern bartype_t barType;
+extern CP::BarType barType;
 extern CP::LockType lockType;
 /**
  * @brief checks existence of file

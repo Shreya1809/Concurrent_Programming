@@ -34,6 +34,7 @@ typedef enum _algoType{
 extern algotype_t algoType;
 extern CP::BarType barType;
 extern CP::LockType lockType;
+
 /**
  * @brief checks existence of file
  * 

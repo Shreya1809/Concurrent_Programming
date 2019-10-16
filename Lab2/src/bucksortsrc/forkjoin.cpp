@@ -14,10 +14,13 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "barriers.h"
 using namespace std;
+using namespace CP;
 
+IBarSharedPtr _fjbar = nullptr;
 
-pthread_barrier_t bar;
+//pthread_barrier_t bar;
 
 struct timespec start_time, end_time;
 int count = 0;
@@ -93,12 +96,12 @@ void merge_sort(vector<int> &inputArray, int low, int high)
 void* sort(void* threadArg) 
 { 
     struct _threadArg *arg = (struct _threadArg*)threadArg;
-    pthread_barrier_wait(&bar);
+    //pthread_barrier_wait(&bar);
+    _fjbar->wait();
     //printf("Thread %zu reporting for duty\n",arg->num);
     if (arg->low < arg->high) { 
         merge_sort(*(arg->inputArray), arg->low, arg->high);
-    }
-	//pthread_barrier_wait(&bar);    
+    }   
     return 0;
 } 
 
@@ -109,7 +112,15 @@ void forkJoinMethod(vector<int> *inputArray, int numOfThreads)
     struct _threadArg threadArg[numOfThreads];
     const size_t MAX_ELEMENTS = inputArray->size();
     // creating n threads 
-    pthread_barrier_init(&bar, NULL, numOfThreads);
+    //pthread_barrier_init(&bar, NULL, numOfThreads);
+    if(barType != CP::BarType::NONE)
+    {
+         _fjbar = BarFactory::GetBarObject(barType, numOfThreads);
+    }
+    else
+    {
+        exit(1);
+    }
     int i = 0;
     for (i = 0; i < numOfThreads; i++)
     {
@@ -133,7 +144,7 @@ void forkJoinMethod(vector<int> *inputArray, int numOfThreads)
         //printf("joined thread number %zu\n",i+1); 
     }
     clock_gettime(CLOCK_MONOTONIC,&end_time);
-    pthread_barrier_destroy(&bar);
+    //pthread_barrier_destroy(&bar);
 
     int kArrayIndex = 0;
     size_t l = threadArg[kArrayIndex].low;

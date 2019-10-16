@@ -11,7 +11,8 @@ namespace CP
     enum class BarType
     {
         PTHREAD = 0,
-        SENSE
+        SENSE,
+        NONE
     };
 
     class IBarrier
@@ -27,12 +28,14 @@ namespace CP
     class BarFactory
     {
         public:
-        static IBarSharedPtr GetBarObject(BarType type);
+        static IBarSharedPtr GetBarObject(BarType type, int numofthreads);
     };
 
     class Pthread_Bar : public IBarrier
     {
         public:
+        Pthread_Bar() = delete;
+        Pthread_Bar(int numofthread);
         __always_inline void wait() override;
         BarType GetBarType() const override
         { 
@@ -40,7 +43,8 @@ namespace CP
         }
         ~Pthread_Bar();
         private:
-        pthread_barrier_t bar;
+        int numOfThreads = 0;
+        pthread_barrier_t bar = {0};
         const BarType TypeOfBarrier = BarType::PTHREAD; 
 
     };
@@ -48,6 +52,8 @@ namespace CP
     class Sense_Bar : public IBarrier
     {
         public:
+        Sense_Bar() = delete;
+        Sense_Bar(int numofthreads):numberOfThreads(numofthreads){};
         __always_inline void wait() override;
         BarType GetBarType() const override
         { 
@@ -55,12 +61,12 @@ namespace CP
         }
         ~Sense_Bar();
         private:
-        std::atomic<int> count = 0;
+        std::atomic<int> count = 1;
         std::atomic<int> senseFlag = 0;
-        size_t numberOfThreads;
+        int numberOfThreads = 0;
         const BarType TypeOfBarrier = BarType::SENSE; 
 
     };
-}
+};
 
 #endif

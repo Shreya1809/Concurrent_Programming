@@ -18,8 +18,8 @@ using namespace std;
 
 
 algotype_t algoType = FORK_JOIN;
-CP::BarType barType = CP::BarType::PTHREAD;
-CP::LockType lockType = CP::LockType::MUTEX_LOCK;
+CP::BarType barType = CP::BarType::NONE;
+CP::LockType lockType = CP::LockType::NONE;
 int name_flag = 0;
 int numOfThreads = 0;
 int numofiterations = 0;

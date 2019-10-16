@@ -16,7 +16,8 @@ namespace CP
         TAS_LOCK,
         TTAS_LOCK,
         TICKET_LOCK,
-        MCS_LOCK
+        MCS_LOCK,
+        NONE
     };
 
     //interface for Lock type

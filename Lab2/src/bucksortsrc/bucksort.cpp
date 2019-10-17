@@ -18,10 +18,14 @@ class Bucket
     private:
         std::multiset<int> _bucket;
         ILockSharedPtr _bucketLock = nullptr;
+        std::shared_ptr<CP::McsLock> _mcsLock = nullptr;
 
     public:
         Bucket(LockType typeoflock)
         {
+            if(typeoflock == CP::LockType::MCS_LOCK)
+                _mcsLock = std::make_shared<CP::McsLock>();
+            
             _bucketLock = LockFactory::GetLockObject(typeoflock);
             // cout << "*****SHREYA**" <<std::string(__FUNCTION__) << "Lock type:" << (int)(_bucketLock->GetLockType()) << endl;
         }
@@ -29,7 +33,7 @@ class Bucket
         {
             // cout << __FUNCTION__ << endl;
         }
-        void insert(int num)
+        void insert(int num, McsLock::QNode &node)
         {
             if(_bucketLock->GetLockType() != LockType::MCS_LOCK)
             {
@@ -39,10 +43,10 @@ class Bucket
             }
             else 
             {
-                McsLock::QNode node;
-                dynamic_pointer_cast<McsLock>(_bucketLock)->Lock(node);
+                // static McsLock::QNode node;
+                _mcsLock->Lock(node);
                 _bucket.insert(num);
-                dynamic_pointer_cast<McsLock>(_bucketLock)->Unlock(node);
+                _mcsLock->Unlock(node);
             }
             
         }
@@ -73,12 +77,13 @@ class BucketManager
         // delete []_bucketHolder;
     }
 
-    void insert(int num)
+    void insert(int num, McsLock::QNode &node)
     {
+        //printf("\rinserting number %d ",num);
         int index = floor ((_numBucket-1) * num / _max);
         //int index = floor (_numBucket * num / _max);
         //int index1 = (num - _min) % _numBucket;
-        _bucketHolder[index].insert(num);
+        _bucketHolder[index].insert(num, node);
     }
 
     vector<int> getSortedList()
@@ -104,9 +109,11 @@ struct _distributeArg
 void *distribute(void *args)
 {
     struct _distributeArg *arg = (struct _distributeArg*)args;
+    McsLock::QNode node;
+    //printf("in distribute thread %d\n",arg->inArray);
     for(size_t i = arg->low; i <= arg->high; i++)
     {
-        arg->buckMan->insert((*(arg->inArray))[i]);
+        arg->buckMan->insert((*(arg->inArray))[i], node);
     }
     return 0;
 }
@@ -136,7 +143,7 @@ void bucketsortMethod(vector<int> *inputArray, size_t numOfThreads)
         pthread_create(&threads[i], NULL, distribute, 
                                         (void*)&threadArg[i]); 
     }
-    //printf("%d threads created\n",numOfThreads);
+    //printf("%ld threads created\n",numOfThreads);
     for (i = 0; i < numOfThreads; i++)
     { 
         pthread_join(threads[i], NULL);

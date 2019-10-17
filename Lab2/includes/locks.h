@@ -111,6 +111,12 @@ namespace CP
         static_assert(alignof(ServingTicketNo) == CACHELINE_SIZE, "ServingTicketNo is not aligned on CACHELINE_SIZE ");
         static_assert(alignof(NextTicketNo) == CACHELINE_SIZE, "NextTicketNo is not aligned on CACHELINE_SIZE");
     };
+    // struct QNode
+    // {
+    //     std::atomic<QNode *> Next = {nullptr};
+    //     std::atomic_bool     Locked = {false};
+    // };
+    // std::atomic<QNode *> Tail = {nullptr};
 
     class McsLock : public ILock
     {
@@ -126,18 +132,33 @@ namespace CP
         void Lock(QNode &node);
         void Unlock(QNode &node);
         LockType GetLockType() const override
-        { 
+        {
             return this->TypeOfLock; 
         }
         ~McsLock();  
     private:
-        //alignas(CACHELINE_SIZE) 
+        // alignas(CACHELINE_SIZE) 
         std::atomic<QNode *> Tail = {nullptr};
         const LockType TypeOfLock = LockType::MCS_LOCK;
     };
 
 };
 
-
+class McsLock1 
+    {
+    public:
+    struct QNode1
+    {
+        std::atomic<QNode1 *> Next = {nullptr};
+        std::atomic_bool     Locked = {false};
+    };
+    public:
+        void lock(QNode1 *node);
+        void unlock(QNode1 *node);
+        ~McsLock1();  
+    private:
+        //alignas(CACHELINE_SIZE) 
+        const CP::LockType TypeOfLock = CP::LockType::MCS_LOCK;
+    };
 
 #endif

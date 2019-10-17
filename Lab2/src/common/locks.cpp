@@ -12,6 +12,8 @@ using namespace CP;
 #define PRINT_DESTRUCTOR_MSG()
 #endif
 
+std::atomic<McsLock1::QNode1 *> tail = {nullptr};
+
 ILockSharedPtr LockFactory::GetLockObject(LockType type)
 {
     switch (type)
@@ -128,8 +130,9 @@ void McsLock::Lock(QNode &node)
         oldTail->Next = &node;
 
         while (node.Locked == true)
-            //CpuRelax();
+        {
             asm("pause");
+        }
     }
 }
 
@@ -142,8 +145,9 @@ void McsLock::Unlock(QNode &node)
             return;
 
         while (node.Next.load() == nullptr)
-            //CpuRelax();
+        {
             asm("pause");
+        }
     }
 
     node.Next.load()->Locked = false;
@@ -154,6 +158,45 @@ McsLock::~McsLock()
     //Unlock(QNode &node);
 }
 
+void McsLock1::lock(QNode1 *node)
+{
+    node->Next = nullptr;
+    node->Locked = true;
+
+    QNode1 *oldTail = tail.exchange(node);
+
+    if (oldTail != nullptr)
+    {
+        oldTail->Next = node;
+
+        while (node->Locked == true)
+            //CpuRelax();
+            asm("pause");
+    }
+}
+
+void McsLock1::unlock(QNode1 *node)
+{
+    if (node->Next.load() == nullptr)
+    {
+        QNode1 *tailWasMe = node;
+        if (tail.compare_exchange_strong(tailWasMe, nullptr))
+            return;
+
+        while (node->Next.load() == nullptr)
+            //CpuRelax();
+            asm("pause");
+    }
+
+    node->Next.load()->Locked = false;
+}
+
+McsLock1::~McsLock1()
+{
+    //Unlock(QNode &node);
+}
+
+//     pri
 //     private:
 //         std::atomic<QNode *> Tail = {nullptr};
 //     };

@@ -84,6 +84,7 @@ int main(int argc , char *argv[])
     }
     line != NULL ? free(line), line = NULL : 0;
     fclose(fp);
+    cout << "File read complete" << endl;
     /*cout << "File read - ";
     for(size_t i = 0; i < inputNumberArray.size(); i++)
     {

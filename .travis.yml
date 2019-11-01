@@ -6,4 +6,4 @@ addons:
 compiler:
   - gcc
 
-script: make
+script: buildScript.sh

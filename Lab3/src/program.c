@@ -13,7 +13,7 @@ Program Approach
 1. Get the command line options and parse it using getopt_long()
 2. Check of the existence of sourcefile using access()
 3. Open the source file, read each line of it using getline(), convert string into integer and add to tail of list
-4. Apply mergesort algorithm to the linked list
+4. Apply mergesort algorithm to the array with openMP pragmas for parallelization
 */
 
 #define _GNU_SOURCE
@@ -26,10 +26,17 @@ Program Approach
 #include <omp.h>
 
 #include "parse.h"
-#include "list.h"
 #include "mergesort.h"
 
 #define NUM_OF_THREADS  2
+
+void PrintList(int A[], int size) 
+{ 
+    int i; 
+    for (i=0; i < size; i++) 
+        printf("%d ", A[i]); 
+    printf("\n"); 
+} 
 
 int main( int argc , char *argv[])
 {
@@ -56,6 +63,7 @@ int main( int argc , char *argv[])
 
     //append the file path to out source and output file
     sprintf(srcfilepath,"../files/%s",src);
+
     sprintf(outfilepath,"../files/%s",out);
     
     // Checking nested parallelism availability
@@ -92,6 +100,7 @@ int main( int argc , char *argv[])
 
     //set no of threads
     omp_set_num_threads (NUM_OF_THREADS);
+
     int max_threads = omp_get_max_threads ();	// Max available threads
     printf("[Max available threads]:    %d\n",max_threads);
     if (NUM_OF_THREADS > max_threads)	// Requested threads are more than max available
@@ -102,12 +111,18 @@ int main( int argc , char *argv[])
     }
 
     //allocating array for merge sort
-    int *inputlist = (int*)malloc(sizeof(int)*no_of_elements);
+    int *inputlist = (int*)malloc(sizeof(int) * no_of_elements);
+    
+    if (inputlist == NULL)// || templist == NULL)
+    {
+      printf ("Error: Could not allocate array of size %d\n", no_of_elements);
+      return 1;
+    }
 
     //set file pointer to begining 
     rewind(fp);
 
-    //reads the file line by line and  copy to the list
+    //reads the file line by line and  copy to the input list
     while ((read = getline(&line, &len, fp)) != -1) {
         sscanf(line, "%d", &data); 
         inputlist[num] = data;
@@ -115,11 +130,8 @@ int main( int argc , char *argv[])
     }
     fclose(fp);
 
-    printf("list of integers to sort => \n");
-    PrintList(inputlist,no_of_elements);
-
     /*the actual merging*/
-    OMP_merge(inputlist,0,no_of_elements-1);
+    OMP_merge(inputlist, no_of_elements, NUM_OF_THREADS);
 
     //if -o option was declared then output to the file
     if(val == 2)
@@ -131,7 +143,6 @@ int main( int argc , char *argv[])
             exit(EXIT_FAILURE);
         }
         else{
-            //chmod(outfilepath,0776);
             printf("Writing sorted integers to output file\n");
             int i = 0;
             while(i != no_of_elements)
@@ -148,10 +159,9 @@ int main( int argc , char *argv[])
     }
     
     printf("Program Done\n");
-    
+    free(inputlist);
     if (line)
         free(line);
 return 0;
 }
-    
 

@@ -10,72 +10,30 @@
  */
 
 #include "mergesort.h"
+#include <string.h>
 #include <omp.h>
 
-struct node* MergeList(struct node* list1,struct node* list2)
-{
-    struct node* MergedList = NULL;
-    if(list1 == NULL) // is either list exhausts, return the elements of the other
-        return list2;
-    if(list2 == NULL)
-        return list1;
-    
-    if(list1->data < list2->data)
-    {
-        MergedList = list1;// list1 has smaller integer, add that node to the final merged node
-        MergedList->next = MergeList(list1->next,list2);//compare the next element of list1 with list 2
-    }
-    else
-    {
-        MergedList = list2;// list2 has smaller integer, add that node to the final merged node
-        MergedList->next = MergeList(list1,list2->next);//recursive call ,compare the next element of list1 with list 2   
-    }
-    return MergedList;
-
-}
-
-void MergeSortList(struct node **head)
-{
-    struct node* temp = *head;
-    struct node* list1;
-    struct node* list2;
-    if(temp == NULL)
-    {
-        //length is 0
-        return;
-    }
-    if(temp->next == NULL)
-    {
-        //length is 1
-        return;
-    }
-    //find middle of the list and split
-    SplitList(temp,&list1,&list2);
-    MergeSortList(&list1);
-    MergeSortList(&list2);
-    *head = MergeList(list1,list2);
-}
-
+/*
+*Refernce : https://www.geeksforgeeks.org/iterative-merge-sort/ 
+*/
 void MergeArray(int input[], int left, int mid, int right) 
 { 
-    int i, j, k; 
-    int n1 = mid - left + 1; 
-    int n2 =  right - mid; 
+    int i, j, k; //index of 1st subarray, 2nd subarray and resultant array
+    int L_size = mid - left + 1; 
+    int R_size =  right - mid; 
   
-    /* create temp arrays */
-    int L[n1], R[n2]; 
+    /* creating 2 left and right temporary arrays */
+    int L[L_size], R[R_size]; 
   
-    /* Copy data to temp arrays L[] and R[] */
-    for (i = 0; i < n1; i++) 
+    /* Copying from input array into temp arrays L[] and R[] */
+    for (i = 0; i < L_size; i++) 
         L[i] = input[left + i]; 
-    for (j = 0; j < n2; j++) 
+    for (j = 0; j < R_size; j++) 
         R[j] = input[mid + 1+ j]; 
   
-    /* Merge the temp arrays back into arr[l..r]*/
-    i = 0; // Initial index of first subarray 
-    j = 0; // Initial index of second subarray 
-    k = left; // Initial index of merged subarray 
-    while (i < n1 && j < n2) 
+    i = 0; j = 0; k = left;
+    //actual comparing and rewriting into input array 
+    while (i < L_size && j < R_size) 
     { 
         if (L[i] <= R[j]) 
         { 
@@ -90,18 +48,14 @@ void MergeArray(int input[], int left, int mid, int right)
         k++; 
     } 
   
-    /* Copy the remaining elements of L[], if there 
-       are any */
-    while (i < n1) 
+    //Copying the remaining elements of L[] and R[]
+    while (i < L_size) 
     { 
         input[k] = L[i]; 
         i++; 
         k++; 
     } 
-  
-    /* Copy the remaining elements of R[], if there 
-       are any */
-    while (j < n2) 
+    while (j < R_size) 
     { 
         input[k] = R[j]; 
         j++; 
@@ -109,35 +63,105 @@ void MergeArray(int input[], int left, int mid, int right)
     } 
 } 
 
-void MergeSortArray(int input[], int left, int right) 
+
+// function to find min of 2 integers 
+int min(int x, int y) { return (x<y)? x :y; } 
+  
+/*Reference : https://www.geeksforgeeks.org/iterative-merge-sort/  
+* Iterative mergesort function to sort arr[0...n-1] 
+*/
+void MergeSortArray(int arr[], int size) 
 { 
-    if (left < right) 
-    { 
-        // Same as (l+r)/2, but avoids overflow for 
-        // large l and h 
-        int mid = left+(right-left)/2; 
-        #pragma omp parallel 
-        {
-            #pragma omp single
-            {
-                #pragma omp task
-                {
-                    MergeSortArray(input, left, mid); 
-                }
-                #pragma omp task
-                {
-                    MergeSortArray(input, mid+1, right); 
-                }
-            }
-        }
-        // Sort first and second halves 
-        MergeArray(input, left, mid, right); 
-       
-    } 
+   int i;  
+   int start; 
+   for (i = 1; i <= size-1; i = 2*i) 
+   { 
+       for (start=0; start< size-1; start += 2*i) 
+       {
+           int mid = min(start + i - 1, size-1); 
+           int end = min(start + 2*i - 1, size-1); 
+           MergeArray(arr, start, mid, end); 
+       } 
+   } 
 } 
 
-void OMP_merge(int input[], int left, int right) 
+void OMP_mergesort(int arr[], int size, int threads)
 {
-    omp_set_nested (1);
-    MergeSortArray(input, left,right); 
+    if (threads == 1)
+    {
+        MergeSortArray(arr, size);  
+    }
+    else if (threads > 1)
+    {
+        #pragma omp parallel sections
+        {
+            #pragma omp section
+            {
+                OMP_mergesort(arr, size / 2, threads / 2);
+            }
+            #pragma omp section
+            {	
+                OMP_mergesort(arr + size / 2, size - size / 2, threads - threads / 2);
+            }
+        }
+      
+      merge (arr, size);//, temp);
+    }
+  else
+    {
+      printf ("Error: %d threads\n", threads);
+      return;
+    }
 }
+
+int merge(int arr[], int size)
+{
+    int *temp = (int*)malloc(sizeof(int) * size);
+    if (temp == NULL)
+    {
+      printf ("Error: Could not allocate array of size %d\n", size);
+      return 1;
+    }
+    int L_index = 0;
+    int R_index = size / 2;
+    int i = 0; //index for temporary list
+    while (L_index < size / 2 && R_index < size)
+    {
+        if (arr[L_index] < arr[R_index])
+        {
+            temp[i] = arr[L_index];
+            L_index++;
+        }
+        else
+        {
+            temp[i] = arr[R_index];
+            R_index++;
+        }
+        i++;
+    }
+    while (L_index < size / 2)
+        {
+        temp[i] = arr[L_index];
+        L_index++;
+        i++;
+        }
+    while (R_index < size)
+        {
+        temp[i] = arr[R_index];
+        R_index++;
+        i++;
+        }
+  // Copy sorted temp array into main array, arr
+    memcpy (arr, temp, size * sizeof (int));
+    free(temp);
+    return 0;
+}
+
+void OMP_merge(int arr[], int size, int threads)
+{
+  omp_set_nested (1);
+  // Parallel mergesort
+  OMP_mergesort(arr, size, threads);
+}  
+
+

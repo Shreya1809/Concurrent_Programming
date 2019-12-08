@@ -52,34 +52,56 @@ bool FG_searchTree(struct fg_treenode *root, int key)
     return false;
 }
 
-struct fg_treenode* FG_newNode(int key , const char* value)
+/*struct fg_treenode* FG_newNode(int key , int value)
 { 
 	struct fg_treenode* node = (struct fg_treenode*) 
-						malloc(sizeof(struct fg_treenode)); 
+						malloc(sizeof(struct fg_treenode));
+    if(node == NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
 	node->key = key; 
-    node->value = (char *)malloc(strlen(value) + 1);
-    strcpy(node->value, value);
+    node->value = value;
 	node->left = NULL; 
 	node->right = NULL; 
     LOCK_INIT(node->node_lock);
-    
+	return(node); 
+}*/
+
+struct fg_treenode* FG_newNode(int key , char *value)
+{ 
+	struct fg_treenode* node = (struct fg_treenode*) 
+						malloc(sizeof(struct fg_treenode));
+    if(node == NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
+	node->key = key; 
+    //node->value = (char*)malloc(sizeof(value));
+    memcpy(node->value,value,sizeof(node->value));
+    //strcpy(node->value,value);
+	node->left = NULL; 
+	node->right = NULL; 
+    LOCK_INIT(node->node_lock);
 	return(node); 
 } 
-
-struct fg_treenode* FG_Insert(struct fg_treenode *root, int key, char *value)
-{
-    struct fg_treenode *newNode = FG_newNode(key, value);
-    
-    LOCK_WRLOCK(root_lock);
+struct fg_treenode* FG_Insert_char(struct fg_treenode **root, int key, char* value)
+{    
     if(root == NULL)
     {
-        return newNode;
+        return NULL;
     }
+    LOCK_WRLOCK(root_lock);
+    if(*root == NULL)
+    {
+        *root = FG_newNode(key, value);
+        LOCK_UNLOCK(root_lock);
+        return *root;
+    }
+
+    LOCK_WRLOCK((*root)->node_lock);
+    struct fg_treenode *current = *root;
     LOCK_UNLOCK(root_lock);
-
-    struct fg_treenode *current = root;    
-
-    LOCK_WRLOCK(current->node_lock);
 
     while(current)
     {
@@ -87,6 +109,8 @@ struct fg_treenode* FG_Insert(struct fg_treenode *root, int key, char *value)
         {
             //free(current->value);
             //copy value here;
+            //current->value = value;
+            LOCK_UNLOCK(current->node_lock);
             break;
         }
         else if(key > current->key)
@@ -99,7 +123,7 @@ struct fg_treenode* FG_Insert(struct fg_treenode *root, int key, char *value)
             }
             else
             {
-                current->right = newNode;
+                current->right = FG_newNode(key, value);
                 LOCK_UNLOCK(current->node_lock);
                 break;
             }
@@ -114,16 +138,123 @@ struct fg_treenode* FG_Insert(struct fg_treenode *root, int key, char *value)
             }
             else
             {
-                current->left = newNode;
+                current->left = FG_newNode(key, value);
                 LOCK_UNLOCK(current->node_lock);
                 break;
             }
         }
     }
-    return root;
+    return *root;
 }
+/*struct fg_treenode* FG_Insert(struct fg_treenode **root, int key, int value)
+{    
+    if(root == NULL)
+    {
+        return NULL;
+    }
+    LOCK_WRLOCK(root_lock);
+    if(*root == NULL)
+    {
+        *root = FG_newNode(key, value);
+        LOCK_UNLOCK(root_lock);
+        return *root;
+    }
 
-char * FG_GetValue(struct fg_treenode *root, int key)
+    LOCK_WRLOCK((*root)->node_lock);
+    struct fg_treenode *current = *root;
+    LOCK_UNLOCK(root_lock);
+
+    while(current)
+    {
+        if(current->key == key)
+        {
+            //free(current->value);
+            //copy value here;
+            current->value = value;
+            LOCK_UNLOCK(current->node_lock);
+            break;
+        }
+        else if(key > current->key)
+        {
+            if(current->right)
+            {
+                LOCK_WRLOCK(current->right->node_lock);
+                LOCK_UNLOCK(current->node_lock);
+                current = current->right;
+            }
+            else
+            {
+                current->right = FG_newNode(key, value);
+                LOCK_UNLOCK(current->node_lock);
+                break;
+            }
+        }
+        else
+        {
+            if(current->left)
+            {
+                LOCK_WRLOCK(current->left->node_lock);
+                LOCK_UNLOCK(current->node_lock);
+                current = current->left;
+            }
+            else
+            {
+                current->left = FG_newNode(key, value);
+                LOCK_UNLOCK(current->node_lock);
+                break;
+            }
+        }
+    }
+    return *root;
+}*/
+
+/*int FG_GetValue(struct fg_treenode *root, int key)
+{
+    if(root)
+    {
+        LOCK_RDLOCK(root->node_lock); 
+    }
+
+    while(root)
+    {
+        if(key == root->key)
+        {
+            LOCK_UNLOCK(root->node_lock); 
+            return root->value;
+        }
+        else if(key > root->key)
+        {
+            if(root->right)
+            {
+                LOCK_RDLOCK(root->right->node_lock); 
+                LOCK_UNLOCK(root->node_lock);
+            } 
+            else 
+            {
+                LOCK_UNLOCK(root->node_lock);
+                return -1;
+            }
+            root = root->right;
+        }
+        else
+        {
+            if(root->left) 
+            {
+                LOCK_RDLOCK(root->left->node_lock);  
+                LOCK_UNLOCK(root->node_lock);
+            }
+            else 
+            {
+                LOCK_UNLOCK(root->node_lock);
+                return -1;
+            }
+            root = root->left;
+        }
+    }
+    LOCK_UNLOCK(root->node_lock);
+    return -1;
+}*/
+char* FG_GetValue_char(struct fg_treenode *root, int key)
 {
     if(root)
     {
@@ -169,8 +300,7 @@ char * FG_GetValue(struct fg_treenode *root, int key)
     LOCK_UNLOCK(root->node_lock);
     return NULL;
 }
-
-void FG_RangeQuery(struct fg_treenode* root,  int key1, int key2) 
+/*void FG_RangeQuery(struct fg_treenode* root,  int key1, int key2) 
 { 
     printf("The Key/Value pairs between %d and %d are:\n",key1,key2);
     if (!root) 
@@ -189,7 +319,7 @@ void FG_RangeQuery(struct fg_treenode* root,  int key1, int key2)
             if (curr->key <= key2 &&  
                 curr->key >= key1)  
             { 
-                printf("Key: %d    Value: %s\n",curr->key,curr->value); 
+                printf("Key: %d    Value: %d\n",curr->key,curr->value); 
             } 
   
             curr = curr->right; 
@@ -221,51 +351,13 @@ void FG_RangeQuery(struct fg_treenode* root,  int key1, int key2)
                 if (curr->key <= key2 &&  
                     curr->key >= key1)  
                 { 
-                    printf("Key: %d    Value: %s\n",curr->key,curr->value);
+                    printf("Key: %d    Value: %d\n",curr->key,curr->value);
                 } 
   
                 curr = curr->right; 
             } 
         } 
     } 
-} 
-/*
-struct fg_treenode* FG_Insert(struct fg_treenode *root, int key, char* value)
-{
-    struct fg_treenode * newnode = FG_newNode(key,value);
-    if(root == NULL)/// tree empty
-    {
-        root = newnode;
-        return root;
-    }
-    struct fg_treenode *curr = root;
-    struct fg_treenode *prev = NULL;
-
-    while(curr)
-    {
-        prev = curr;
-        if(curr->key == key)
-        {
-            memcpy(curr->value,value,strlen(value)+1);
-        }
-        if(curr->key > key)
-        {
-            curr = curr->right;
-        }
-        else
-        {
-            curr = curr->left;           
-        }
-        
-    }
-    if(key < prev->key)
-    {
-        prev->left = newnode;
-    }
-    else{
-        prev->right = newnode;
-    }
-    return prev;
 }*/
 
 void FG_InorderDisplay(struct fg_treenode *root) 
@@ -274,52 +366,38 @@ void FG_InorderDisplay(struct fg_treenode *root)
     { 
         FG_InorderDisplay(root->left); 
         printf("Key: %d ", root->key);
+        //printf("Value: %d\n", root->value); 
         printf("Value: %s\n", root->value); 
         FG_InorderDisplay(root->right); 
     } 
-} 
+}
 
-// void FG_Range(struct fg_treenode *root, int key1, int key2) 
-// { 
-//     if (root != NULL) 
-//     { 
-//         FG_InorderDisplay(root->left); 
-//         printf("Key: %d ", root->key);
-//         printf("Value: %s\n", root->value); 
-//         FG_InorderDisplay(root->right); 
-//     } 
-// } 
+void FG_Destroy(struct fg_treenode *root) 
+{ 
+    if(root->left == NULL && root->right == NULL)
+    {
+        free(root);
+        return;
+    }
+    if(root != NULL)
+    { 
+        FG_Destroy(root->left);
+        FG_Destroy(root->right); 
+    } 
+}
 
-// void inOrder(struct fg_treenode *root) 
-// { 
-//     stack<fg_treenode *> s; 
-//     struct fg_treenode *curr = root; 
+void deleteTree(struct fg_treenode* node)  
+{ 
+    if (node == NULL) return; 
   
-//     while (curr != NULL || s.empty() == false) 
-//     { 
-//         /* Reach the left most Node of the 
-//            curr Node */
-//         while (curr !=  NULL) 
-//         { 
-//             /* place pointer to a tree node on 
-//                the stack before traversing 
-//               the node's left subtree */
-//             s.push(curr); 
-//             curr = curr->left; 
-//         } 
-  
-//         /* Current must be NULL at this point */
-//         curr = s.top(); 
-//         s.pop(); 
-  
-//         cout << curr->data << " "; 
-  
-//         /* we have visited the node and its 
-//            left subtree.  Now, it's right 
-//            subtree's turn */
-//         curr = curr->right; 
-  
-//     } /* end of while */
-// }
+    /* first delete both subtrees */
+    deleteTree(node->left); 
+    deleteTree(node->right); 
+    
+    /* then delete the node */
+    //printf("\n Deleting node: %d", node->key); 
+    free(node); 
+}  
+
   
   

@@ -22,6 +22,7 @@ using namespace std;
 /* Flag set by ‘--name’. */
 extern int info_flag;
 extern int numOfThreads;
+extern int iteration;
 
 /**
  * @brief checks existence of file

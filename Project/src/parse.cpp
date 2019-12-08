@@ -17,6 +17,7 @@ using namespace std;
 
 int info_flag = 0;
 int numOfThreads = 1;
+int iteration = 1;
 
 /* getopt_long stores the option index here. */
 static int option_index = 0;
@@ -29,6 +30,7 @@ static struct option long_options[] =
     {"COMMANDS",    no_argument,       0, 'c'},
     {"TEST",    no_argument,       0, 'u'},
     {"threads", required_argument,  0,  't'},
+    {"iteration", required_argument,  0,  'i'},
     {0, 0, 0, 0}
 };
 
@@ -38,7 +40,7 @@ int ParseCommandline(int argc , char *argv[], int &commandFlag)
     commandFlag = 0;
     while(1)
     {
-        c = getopt_long (argc, argv, "t:huc",
+        c = getopt_long (argc, argv, "t:i:huc",
                     long_options, &option_index);
 
         if(c ==-1) 
@@ -76,6 +78,12 @@ int ParseCommandline(int argc , char *argv[], int &commandFlag)
         case 't':
             printf("The number of threads to be spawned : %s\n",optarg);
             numOfThreads = atoi(optarg);
+
+        break;
+
+        case 'i':
+            printf("The number of nodes per thread : %s\n",optarg);
+            iteration = atoi(optarg);
 
         break;
 

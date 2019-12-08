@@ -59,5 +59,5 @@ char *rand_value(char *dst, int size, int number)
 int rand_key(void)
 {
     //srand(time(0)); 
-    return (rand() % 1000);
+    return rand();
 }

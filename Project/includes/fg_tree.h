@@ -11,7 +11,8 @@
 
 struct fg_treenode{
     int key;
-    char* value; 
+    //int value;
+    char value[10]; 
     struct fg_treenode *left ,*right;
     LOCK_T node_lock;
 };
@@ -19,11 +20,14 @@ struct fg_treenode{
 using namespace std; 
 
 bool FG_searchTree(struct fg_treenode *root, int key);
-char * FG_GetValue(struct fg_treenode *root, int key);
-struct fg_treenode* FG_newNode(int key , const char* value);
-struct fg_treenode* FG_Insert(struct fg_treenode *root, int key, char* value);
-//struct fg_treenode* FG_Insert2(struct fg_treenode *root, int key, char* value);
+int FG_GetValue(struct fg_treenode *root, int key);
+char* FG_GetValue_char(struct fg_treenode *root, int key);
+struct fg_treenode* FG_newNode(int key , char *value);
+//struct fg_treenode* FG_Insert(struct fg_treenode **root, int key, int value);
+struct fg_treenode* FG_Insert_char(struct fg_treenode **root, int key, char* value);
 void FG_InorderDisplay(struct fg_treenode *root);
 void FG_RangeQuery(struct fg_treenode* root,  int key1, int key2);
+void FG_Destroy(struct fg_treenode *root);
+void deleteTree(struct fg_treenode* node);
 
 #endif

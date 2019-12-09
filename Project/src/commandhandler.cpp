@@ -66,10 +66,9 @@ void Commands(void)
     struct treenode *root = NULL; 
     srand(time(0));
     int num = rand()%50;
-    char mytext[50];
+    char mytext[10];
     for(int i = 1; i < num+1; i++ )
     {
-        srand(time(0));
         root = PutEntry(root, rand_key()%i , rand_value(mytext, sizeof(mytext), i));
     }
     printf("*******************************************\n");

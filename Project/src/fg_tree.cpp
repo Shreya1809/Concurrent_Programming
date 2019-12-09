@@ -107,9 +107,9 @@ struct fg_treenode* FG_Insert_char(struct fg_treenode **root, int key, char* val
     {
         if(current->key == key)
         {
-            //free(current->value);
+            memset((current->value),0, sizeof(current->value));
             //copy value here;
-            //current->value = value;
+            memcpy(current->value,value,sizeof(current->value));
             LOCK_UNLOCK(current->node_lock);
             break;
         }
@@ -303,12 +303,16 @@ char* FG_GetValue_char(struct fg_treenode *root, int key)
 /*void FG_RangeQuery(struct fg_treenode* root,  int key1, int key2) 
 { 
     printf("The Key/Value pairs between %d and %d are:\n",key1,key2);
-    if (!root) 
-        return; 
+    LOCK_RDLOCK(root_lock);
+    if(!root)
+    {
+        LOCK_UNLOCK(root_lock);
+        return;    
+    }
   
-    struct fg_treenode* curr = root; 
-  
-    //LOCK_RDLOCK(root->node_lock); 
+    LOCK_RDLOCK(root->node_lock);
+    struct fg_treenode* curr = root;
+    LOCK_UNLOCK(root_lock); 
 
     while (curr) { 
   
@@ -321,13 +325,21 @@ char* FG_GetValue_char(struct fg_treenode *root, int key)
             { 
                 printf("Key: %d    Value: %d\n",curr->key,curr->value); 
             } 
-  
-            curr = curr->right; 
-
-        } 
-  
+            struct fg_treenode* temp = curr->right;
+            if(temp)
+            {
+                LOCK_RDLOCK(temp->node_lock);
+            }
+            LOCK_UNLOCK(curr->node_lock);
+            curr = temp;
+        }
         else { 
-            struct fg_treenode* pre = curr->left; 
+            struct fg_treenode* pre = curr->left;
+            if(pre)
+            {
+                LOCK_RDLOCK(pre->node_lock);
+            } 
+            LOCK_UNLOCK(curr->node_lock);
             // finding the inorder predecessor- 
             // inorder predecessor is the right 
             // most in left subtree or the left  
@@ -341,7 +353,7 @@ char* FG_GetValue_char(struct fg_treenode *root, int key)
             { 
                 pre->right = curr; 
                 curr = curr->left; 
-            } 
+            }
   
             else { 
                 pre->right = NULL; 
@@ -358,12 +370,71 @@ char* FG_GetValue_char(struct fg_treenode *root, int key)
             } 
         } 
     } 
-}*/
+}
+*/
+void FG_Range(struct fg_treenode *root, int key_low, int key_high)
+{
+    _FG_Range(root, NULL, key_low, key_high);
+}
+
+void _FG_Range(struct fg_treenode *root, struct fg_treenode *parent, int key_low, int key_high)
+{
+    if(parent == NULL)
+    {
+        LOCK_RDLOCK(root_lock);
+        if (root == NULL)
+        {
+            LOCK_UNLOCK(root_lock);
+            return;
+        }
+        LOCK_RDLOCK(root->node_lock);
+        LOCK_UNLOCK(root_lock);
+    }
+
+    if (key_low < root->key)
+    {
+        if(root->left)
+        {
+            LOCK_RDLOCK(root->left->node_lock);
+            LOCK_UNLOCK(root->node_lock);
+            _FG_Range(root->left, root, key_low, key_high);
+            LOCK_RDLOCK(root->node_lock);
+        }
+        // else
+        // {
+        //     LOCK_UNLOCK(root->node_lock);
+        //     return;
+        // }
+    }
+
+    if (root->key >= key_low && root->key <= key_high)
+    {
+        //std::cout << "Key: " << root->key << std::endl;
+        printf("L[%d]\tH[%d]\tRange [Key: %d\tValue: %s]\n",key_low,key_high,root->key,root->value);
+    }
+
+    if (key_high > root->key)
+    {
+        if(root->right)
+        {
+            LOCK_RDLOCK(root->right->node_lock);
+            LOCK_UNLOCK(root->node_lock);
+            _FG_Range(root->right, root, key_low, key_high);
+            LOCK_RDLOCK(root->node_lock);
+        }
+        // else
+        // {
+        //     LOCK_UNLOCK(root->node_lock);
+        //     return;
+        // }
+    }
+    LOCK_UNLOCK(root->node_lock);
+}
 
 void FG_InorderDisplay(struct fg_treenode *root) 
 { 
     if (root != NULL) 
-    { 
+    {
         FG_InorderDisplay(root->left); 
         printf("Key: %d ", root->key);
         //printf("Value: %d\n", root->value); 

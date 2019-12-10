@@ -1,0 +1,341 @@
+
+ Performance counter stats for './project -t100':
+
+           347,896      cache-misses                                                
+
+       0.010007200 seconds time elapsed
+
+       0.004593000 seconds user
+       0.016077000 seconds sys
+
+
+
+ Performance counter stats for './project -t200':
+
+           750,157      cache-misses                                                
+
+       0.016494581 seconds time elapsed
+
+       0.008513000 seconds user
+       0.025539000 seconds sys
+
+
+
+ Performance counter stats for './project -t500':
+
+         2,765,720      cache-misses                                                
+
+       0.041682067 seconds time elapsed
+
+       0.014158000 seconds user
+       0.077869000 seconds sys
+
+
+
+ Performance counter stats for './project -t1000':
+
+         6,501,203      cache-misses                                                
+
+       0.080957279 seconds time elapsed
+
+       0.026477000 seconds user
+       0.158865000 seconds sys
+
+
+
+ Performance counter stats for './project -t1500':
+
+        10,208,861      cache-misses                                                
+
+       0.121530678 seconds time elapsed
+
+       0.041092000 seconds user
+       0.238336000 seconds sys
+
+
+
+ Performance counter stats for './project -t2000':
+
+        14,150,011      cache-misses                                                
+
+       0.165172029 seconds time elapsed
+
+       0.052748000 seconds user
+       0.332721000 seconds sys
+
+
+
+ Performance counter stats for './project -t200':
+
+        21,035,635      L1-dcache-loads                                             
+
+       0.016649676 seconds time elapsed
+
+       0.011781000 seconds user
+       0.023562000 seconds sys
+
+
+
+ Performance counter stats for './project -t500':
+
+        52,509,432      L1-dcache-loads                                             
+
+       0.040801582 seconds time elapsed
+
+       0.025076000 seconds user
+       0.066870000 seconds sys
+
+
+
+ Performance counter stats for './project -t1000':
+
+       108,160,900      L1-dcache-loads                                             
+
+       0.082486267 seconds time elapsed
+
+       0.035348000 seconds user
+       0.153176000 seconds sys
+
+
+
+ Performance counter stats for './project -t1500':
+
+       161,453,613      L1-dcache-loads                                             
+
+       0.119473687 seconds time elapsed
+
+       0.047765000 seconds user
+       0.230868000 seconds sys
+
+
+
+ Performance counter stats for './project -t2000':
+
+       219,968,863      L1-dcache-loads                                             
+
+       0.168018594 seconds time elapsed
+
+       0.041479000 seconds user
+       0.344281000 seconds sys
+
+
+
+ Performance counter stats for './project -t200':
+
+         3,113,241      L1-dcache-load-misses                                       
+
+       0.016545630 seconds time elapsed
+
+       0.012751000 seconds user
+       0.022314000 seconds sys
+
+
+
+ Performance counter stats for './project -t500':
+
+         7,628,284      L1-dcache-load-misses                                       
+
+       0.042469078 seconds time elapsed
+
+       0.019574000 seconds user
+       0.071772000 seconds sys
+
+
+
+ Performance counter stats for './project -t1000':
+
+        15,543,697      L1-dcache-load-misses                                       
+
+       0.082591101 seconds time elapsed
+
+       0.018296000 seconds user
+       0.168326000 seconds sys
+
+
+
+ Performance counter stats for './project -t1500':
+
+        23,794,741      L1-dcache-load-misses                                       
+
+       0.121317660 seconds time elapsed
+
+       0.056508000 seconds user
+       0.226033000 seconds sys
+
+
+
+ Performance counter stats for './project -t2000':
+
+        30,912,713      L1-dcache-load-misses                                       
+
+       0.162514391 seconds time elapsed
+
+       0.046046000 seconds user
+       0.329411000 seconds sys
+
+
+
+ Performance counter stats for './project -t200':
+
+           264,690      branch-load-misses                                          
+
+       0.018412109 seconds time elapsed
+
+       0.006913000 seconds user
+       0.031110000 seconds sys
+
+
+
+ Performance counter stats for './project -t500':
+
+           510,903      branch-load-misses                                          
+
+       0.041942094 seconds time elapsed
+
+       0.023064000 seconds user
+       0.064581000 seconds sys
+
+
+
+ Performance counter stats for './project -t1000':
+
+         1,057,911      branch-load-misses                                          
+
+       0.082422591 seconds time elapsed
+
+       0.018660000 seconds user
+       0.167942000 seconds sys
+
+
+
+ Performance counter stats for './project -t1500':
+
+         1,584,998      branch-load-misses                                          
+
+       0.121186147 seconds time elapsed
+
+       0.050133000 seconds user
+       0.233954000 seconds sys
+
+
+
+ Performance counter stats for './project -t2000':
+
+         2,036,726      branch-load-misses                                          
+
+       0.164313675 seconds time elapsed
+
+       0.041109000 seconds user
+       0.338013000 seconds sys
+
+
+
+ Performance counter stats for './project -t200':
+
+        14,615,578      branch-loads                                                
+
+       0.018114441 seconds time elapsed
+
+       0.017268000 seconds user
+       0.020722000 seconds sys
+
+
+
+ Performance counter stats for './project -t500':
+
+        35,562,261      branch-loads                                                
+
+       0.041445079 seconds time elapsed
+
+       0.020138000 seconds user
+       0.068470000 seconds sys
+
+
+
+ Performance counter stats for './project -t1000':
+
+        73,483,120      branch-loads                                                
+
+       0.081334654 seconds time elapsed
+
+       0.025234000 seconds user
+       0.161503000 seconds sys
+
+
+
+ Performance counter stats for './project -t1500':
+
+       109,459,678      branch-loads                                                
+
+       0.121751562 seconds time elapsed
+
+       0.038975000 seconds user
+       0.242512000 seconds sys
+
+
+
+ Performance counter stats for './project -t2000':
+
+       149,426,526      branch-loads                                                
+
+       0.166007312 seconds time elapsed
+
+       0.059440000 seconds user
+       0.319495000 seconds sys
+
+
+
+ Performance counter stats for './project -t200':
+
+             2,185      page-faults                                                 
+
+       0.015762508 seconds time elapsed
+
+       0.006461000 seconds user
+       0.025845000 seconds sys
+
+
+
+ Performance counter stats for './project -t500':
+
+             5,318      page-faults                                                 
+
+       0.038247712 seconds time elapsed
+
+       0.011899000 seconds user
+       0.071397000 seconds sys
+
+
+
+ Performance counter stats for './project -t1000':
+
+            10,536      page-faults                                                 
+
+       0.077481373 seconds time elapsed
+
+       0.035119000 seconds user
+       0.136966000 seconds sys
+
+
+
+ Performance counter stats for './project -t1500':
+
+            15,763      page-faults                                                 
+
+       0.114445986 seconds time elapsed
+
+       0.072802000 seconds user
+       0.188430000 seconds sys
+
+
+
+ Performance counter stats for './project -t2000':
+
+            20,982      page-faults                                                 
+
+       0.154526189 seconds time elapsed
+
+       0.034612000 seconds user
+       0.311510000 seconds sys
+
+

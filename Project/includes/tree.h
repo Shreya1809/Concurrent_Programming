@@ -34,4 +34,9 @@ void RangeQuery(struct treenode *root, int k1, int k2);
 void TestRangeQuery(int key1, int key2); 
 bool KeySearch(struct treenode* root, int key);
 
+void FG_TestRange(int key1, int key2);
+void FG_TestPut(void);
+int FG_TestNodeCreation(void);
+void FG_TestGet(int key);
+
 #endif

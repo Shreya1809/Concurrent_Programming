@@ -18,7 +18,7 @@ using namespace std;
 int info_flag = 0;
 int numOfThreads = 1;
 int iteration = 1;
-int mode = 0;
+int log_mode = 0;
 
 /* getopt_long stores the option index here. */
 static int option_index = 0;
@@ -30,9 +30,9 @@ static struct option long_options[] =
     {"INSTRUCTION",    no_argument,       0, 'h'},
     {"COMMANDS",    no_argument,       0, 'c'},
     {"TEST",    no_argument,       0, 'u'},
+    {"LOG", no_argument,  0,  'l'},
     {"threads", required_argument,  0,  't'},
     {"iteration", required_argument,  0,  'i'},
-    {"lock", required_argument,  0,  'l'},
     {0, 0, 0, 0}
 };
 
@@ -42,7 +42,7 @@ int ParseCommandline(int argc , char *argv[], int &commandFlag)
     commandFlag = 0;
     while(1)
     {
-        c = getopt_long (argc, argv, "t:i:l:huc",
+        c = getopt_long (argc, argv, "t:i:lhuc",
                     long_options, &option_index);
 
         if(c ==-1) 
@@ -90,17 +90,8 @@ int ParseCommandline(int argc , char *argv[], int &commandFlag)
         break;
 
         case 'l':
-            printf("Lock mode selected : %s\n",optarg);
-            mode = atoi(optarg);
-            if(mode==1)
-            {
-                printf("Using Read/Write locks\n");
-            }
-            else
-            {
-                printf("Using normal Hand over hand locking\n");
-            }
-
+            printf("Logging mode enabled\n");
+            log_mode = 1;
         break;
 
         case '?':

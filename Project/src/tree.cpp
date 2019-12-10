@@ -2,6 +2,7 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <string.h>
+#include "fg_tree.h"
 #include "tree.h"
 
 /* A binary tree node has data, pointer to left child 
@@ -98,6 +99,19 @@ int TestNodeCreation(void)
 	return 0; 
 }
 
+int FG_TestNodeCreation(void)
+{    
+	struct fg_treenode *root = FG_newNode(1, (char*)"ab"); 
+	root->left	 = FG_newNode(2, (char*)"bc"); 
+	root->right	 = FG_newNode(3, (char*)"cd"); 
+	root->left->left = FG_newNode(4, (char*)"de"); 
+	root->left->right = FG_newNode(5, (char*)"ef"); 
+
+	printf("The contents of the database node creation test as follows:\n"); 
+	FG_InorderDisplay(root); 
+	return 0; 
+}
+
 struct treenode* PutEntry(struct treenode* node, int key, const char* value) //insertion
 { 
     /* If the tree is empty, return a new node */
@@ -126,6 +140,21 @@ void TestPutEntry(void)
     root = PutEntry(root, 80 , "stu");
     printf("The contents of the database for PUT test is as follows:\n"); 
 	InorderDisplay(root);  
+}
+
+void FG_TestPut(void)
+{
+    printf("--------[PUT TEST]--------\n");
+    struct fg_treenode *root = NULL; 
+    FG_Insert_char(&root, 50 , (char*)"abc"); 
+    FG_Insert_char(&root, 30 , (char*)"def"); 
+    FG_Insert_char(&root, 20 , (char*)"ghi"); 
+    FG_Insert_char(&root, 40 , (char*)"jkl"); 
+    FG_Insert_char(&root, 70 , (char*)"mno"); 
+    FG_Insert_char(&root, 60 , (char*)"pqr"); 
+    FG_Insert_char(&root, 80 , (char*)"stu");
+    printf("The contents of the database for PUT test is as follows:\n"); 
+	FG_InorderDisplay(root);  
 }
 const char* GetValue(struct treenode* node, int key) 
 { 
@@ -162,6 +191,28 @@ void TestGetValue(int key)
         printf("GetValue test failed, ret is %d\n",ret);
     }
 }
+
+void FG_TestGet(int key)
+{
+    printf("--------[GET TEST]--------\n");
+    struct fg_treenode* root = NULL;
+    int ret = 0;
+    char mystring[19] = "Shreya chakraborty";
+    //root = PutEntry(root, key , "Shreya chakraborty"); 
+    FG_Insert_char(&root, key, (char*)"Shreya chakraborty");
+    char* getValue = FG_GetValue_char(root, key);
+    ret = memcmp(mystring, getValue,19);
+    if(!ret)
+    {
+        printf("Test for Get value successful, key: %d Value: %s\n", key,FG_GetValue_char(root, key));
+    }
+    else
+    {
+        printf("GetValue test failed, ret is %d\n",ret);
+    }
+}
+
+
 struct treenode * getMinKeyNode(struct treenode* node) 
 { 
     struct treenode* current = node; 
@@ -290,6 +341,31 @@ void TestRangeQuery(int key1, int key2)
     InorderDisplay(root); 
     printf("Database entries in range %d to %d are as follows:\n", key1, key2);
     RangeQuery(root, key1, key2);   
+}
+
+void FG_TestRange(int key1, int key2)
+{
+    printf("-------[RANGE TEST]-------\n");
+    struct fg_treenode* root = NULL;
+    FG_Insert_char(&root, 0 , (char*)"Shreya chakraborty");
+    FG_Insert_char(&root, 50 , (char*)"abc"); 
+    FG_Insert_char(&root, 30 , (char*)"def"); 
+    FG_Insert_char(&root, 20 , (char*)"ghi"); 
+    FG_Insert_char(&root, 40 , (char*)"jkl"); 
+    FG_Insert_char(&root, 70 , (char*)"mno"); 
+    FG_Insert_char(&root, 60 , (char*)"pqr"); 
+    FG_Insert_char(&root, 80 , (char*)"stu");
+    FG_Insert_char(&root, 15 , (char*)"abc"); 
+    FG_Insert_char(&root, 35 , (char*)"def"); 
+    FG_Insert_char(&root, 25 , (char*)"ghi"); 
+    FG_Insert_char(&root, 45 , (char*)"jkl"); 
+    FG_Insert_char(&root, 75 , (char*)"mno"); 
+    FG_Insert_char(&root, 65 , (char*)"pqr"); 
+    FG_Insert_char(&root, 85 , (char*)"stu");
+    printf("Complete Database Entries:\n");
+    FG_InorderDisplay(root); 
+    printf("Database entries in range %d to %d are as follows:\n", key1, key2);
+    FG_Range(root, key1, key2,0,1);   
 }
 
 bool KeySearch(struct treenode* root, int key) 

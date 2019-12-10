@@ -23,7 +23,7 @@ using namespace std;
 extern int info_flag;
 extern int numOfThreads;
 extern int iteration;
-extern int mode;
+extern int log_mode;
 
 
 /**

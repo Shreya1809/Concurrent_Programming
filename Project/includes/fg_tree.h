@@ -11,7 +11,6 @@
 
 struct fg_treenode{
     int key;
-    //int value;
     char value[10]; 
     struct fg_treenode *left ,*right;
     LOCK_T node_lock;
@@ -27,9 +26,9 @@ struct fg_treenode* FG_newNode(int key , char *value);
 struct fg_treenode* FG_Insert_char(struct fg_treenode **root, int key, char* value);
 void FG_InorderDisplay(struct fg_treenode *root);
 //void FG_RangeQuery(struct fg_treenode* root,  int key1, int key2);
-void FG_Range(struct fg_treenode *root, int key_low, int key_high);
-void _FG_Range(struct fg_treenode *root, struct fg_treenode *parent, int key_low, int key_high);
+void FG_Range(struct fg_treenode *root, int key_low, int key_high, int threadno, int logging);
+void _FG_Range(struct fg_treenode *root, struct fg_treenode *parent, int key_low, int key_high,int threadno, int logging);
 void FG_Destroy(struct fg_treenode *root);
-void deleteTree(struct fg_treenode* node);
+struct fg_treenode* deleteTree(struct fg_treenode* node);
 
 #endif

@@ -300,84 +300,13 @@ char* FG_GetValue_char(struct fg_treenode *root, int key)
     LOCK_UNLOCK(root->node_lock);
     return NULL;
 }
-/*void FG_RangeQuery(struct fg_treenode* root,  int key1, int key2) 
-{ 
-    printf("The Key/Value pairs between %d and %d are:\n",key1,key2);
-    LOCK_RDLOCK(root_lock);
-    if(!root)
-    {
-        LOCK_UNLOCK(root_lock);
-        return;    
-    }
-  
-    LOCK_RDLOCK(root->node_lock);
-    struct fg_treenode* curr = root;
-    LOCK_UNLOCK(root_lock); 
 
-    while (curr) { 
-  
-        if (curr->left == NULL)  
-        { 
-            // check if current node  
-            // lies between n1 and n2 
-            if (curr->key <= key2 &&  
-                curr->key >= key1)  
-            { 
-                printf("Key: %d    Value: %d\n",curr->key,curr->value); 
-            } 
-            struct fg_treenode* temp = curr->right;
-            if(temp)
-            {
-                LOCK_RDLOCK(temp->node_lock);
-            }
-            LOCK_UNLOCK(curr->node_lock);
-            curr = temp;
-        }
-        else { 
-            struct fg_treenode* pre = curr->left;
-            if(pre)
-            {
-                LOCK_RDLOCK(pre->node_lock);
-            } 
-            LOCK_UNLOCK(curr->node_lock);
-            // finding the inorder predecessor- 
-            // inorder predecessor is the right 
-            // most in left subtree or the left  
-            // child, i.e in BST it is the  
-            // maximum(right most) in left subtree. 
-            while (pre->right != NULL &&  
-                   pre->right != curr) 
-                        pre = pre->right; 
-  
-            if (pre->right == NULL)  
-            { 
-                pre->right = curr; 
-                curr = curr->left; 
-            }
-  
-            else { 
-                pre->right = NULL; 
-  
-                // check if current node lies  
-                // between n1 and n2 
-                if (curr->key <= key2 &&  
-                    curr->key >= key1)  
-                { 
-                    printf("Key: %d    Value: %d\n",curr->key,curr->value);
-                } 
-  
-                curr = curr->right; 
-            } 
-        } 
-    } 
-}
-*/
-void FG_Range(struct fg_treenode *root, int key_low, int key_high)
+void FG_Range(struct fg_treenode *root, int key_low, int key_high , int threadno, int logging)
 {
-    _FG_Range(root, NULL, key_low, key_high);
+    _FG_Range(root, NULL, key_low, key_high,threadno,logging);
 }
 
-void _FG_Range(struct fg_treenode *root, struct fg_treenode *parent, int key_low, int key_high)
+void _FG_Range(struct fg_treenode *root, struct fg_treenode *parent, int key_low, int key_high,int threadno, int logging)
 {
     if(parent == NULL)
     {
@@ -397,20 +326,19 @@ void _FG_Range(struct fg_treenode *root, struct fg_treenode *parent, int key_low
         {
             LOCK_RDLOCK(root->left->node_lock);
             LOCK_UNLOCK(root->node_lock);
-            _FG_Range(root->left, root, key_low, key_high);
+            _FG_Range(root->left, root, key_low, key_high,threadno,logging);
             LOCK_RDLOCK(root->node_lock);
         }
-        // else
-        // {
-        //     LOCK_UNLOCK(root->node_lock);
-        //     return;
-        // }
+        
     }
 
     if (root->key >= key_low && root->key <= key_high)
     {
         //std::cout << "Key: " << root->key << std::endl;
-        printf("L[%d]\tH[%d]\tRange [Key: %d\tValue: %s]\n",key_low,key_high,root->key,root->value);
+        if(logging)
+        {
+            printf("RANGE------>Thread[%d]\tLow[%d]\tHigh[%d]\tRange [Key: %d\tValue: %s]\n",threadno,key_low,key_high,root->key,root->value);
+        }
     }
 
     if (key_high > root->key)
@@ -419,14 +347,9 @@ void _FG_Range(struct fg_treenode *root, struct fg_treenode *parent, int key_low
         {
             LOCK_RDLOCK(root->right->node_lock);
             LOCK_UNLOCK(root->node_lock);
-            _FG_Range(root->right, root, key_low, key_high);
+            _FG_Range(root->right, root, key_low, key_high,threadno,logging);
             LOCK_RDLOCK(root->node_lock);
         }
-        // else
-        // {
-        //     LOCK_UNLOCK(root->node_lock);
-        //     return;
-        // }
     }
     LOCK_UNLOCK(root->node_lock);
 }
@@ -457,9 +380,9 @@ void FG_Destroy(struct fg_treenode *root)
     } 
 }
 
-void deleteTree(struct fg_treenode* node)  
+struct fg_treenode* deleteTree(struct fg_treenode* node)  
 { 
-    if (node == NULL) return; 
+    if (node == NULL) return node; 
   
     /* first delete both subtrees */
     deleteTree(node->left); 
@@ -467,7 +390,9 @@ void deleteTree(struct fg_treenode* node)
     
     /* then delete the node */
     //printf("\n Deleting node: %d", node->key); 
-    free(node); 
+    free(node);
+    node = NULL;
+    return node;
 }  
 
   

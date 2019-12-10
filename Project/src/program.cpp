@@ -249,13 +249,13 @@ int main(int argc, char *argv[])
     printf("%d\t%d\t%lf\t\n", numOfThreads, numOfThreads, diff[2]);
     printf("Program Done\n");
 
-    std::ofstream ofr("samplesN" + std::to_string(numOfThreads) + ".csv", std::ios::app);
-    if(ofr.fail())
-    {
-        printf("Cannot open samples.csv to write\n");
-        return 1;
-    }
-    ofr << diff[1] << "," << diff[0] << "," << diff[4] << ","<< diff[3] << ","<< diff[2] << "\n";
-    ofr.close();
+    // std::ofstream ofr("samplesN" + std::to_string(numOfThreads) + ".csv", std::ios::app);
+    // if(ofr.fail())
+    // {
+    //     printf("Cannot open samples.csv to write\n");
+    //     return 1;
+    // }
+    // ofr << diff[1] << "," << diff[0] << "," << diff[4] << ","<< diff[3] << ","<< diff[2] << "\n";
+    // ofr.close();
     return 0;
 }

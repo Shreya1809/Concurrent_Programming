@@ -2,7 +2,7 @@
 #define LOCK_H_
 
 #include <pthread.h>
-//#define USE_RWLOCK
+// #define USE_RWLOCK
 
 #ifdef USE_RWLOCK
 #define LOCK_T              pthread_rwlock_t
